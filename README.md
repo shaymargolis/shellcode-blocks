@@ -57,5 +57,5 @@ sudo apt install gcc-9-mips-linux-gnu binutils-multiarch
 | Gemerate example shellcode step using primitives      | ☑          |
 | Generate shellcodes using python script without make  | ☑          |
 | How to link between memcpy in stage to the next stage | ☑          |
-| Units tests using unicorn or something?               | ☐          |
+| Units tests using unicorn or something?               | ☑          |
 
