@@ -23,7 +23,8 @@ first_step = ShellcodeStep(
     [
         ShellcodePrimitiveMemcpy("copy_next_stage", 0x80abcdef, 0x8f0ed0b0, 0x100),
         ShellcodePrimitivePrint("print_debug", 0x80901234, "This is a print!\\n"),
-        ShellcodePrimitiveGoto("goto_next_stage", 0x801bc00f)
+        ShellcodePrimitiveJumpHook("put_jmp_hook", 0x80901234, 0x8f0ed0b0),
+        ShellcodePrimitiveGoto("goto_next_stage", 0x801bc00f),
     ],
     0x1000
 )
@@ -32,7 +33,8 @@ first_step = ShellcodeStep(
 # That:
 # 1. Copies 0x100 bytes from 0x80abcdef to 0x8f0ed0b0
 # 2. Prints "This is a print!" using printf func at 0x80901234
-# 3. Jumps to 0x801bc00f
+# 3. Puts jump hook on 0x80901234, that will jump to 0x8f0ed0b0
+# 4. Jumps to 0x801bc00f
 first_step_out = first_step.generate(Path("/tmp/build") / step.nickname)
 ```
 
