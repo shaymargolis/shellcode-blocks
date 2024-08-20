@@ -33,7 +33,8 @@ shellcodes = {
 
 | task                                                  | is it done |
 |-----------------------------------------------------  |------------|
-| Generate shellcodes using python script without make  |            |
-| How to link between memcpy in stage to the next stage |            |
+| Gemerate example shellcode step using primitives      | ☑          |
+| Generate shellcodes using python script without make  | ☐          |
+| How to link between memcpy in stage to the next stage | ☐          |
 
 
