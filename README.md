@@ -38,6 +38,18 @@ first_step = ShellcodeStep(
 first_step_out = first_step.generate(Path("/tmp/build") / step.nickname)
 ```
 
+## How it works?
+
+1. The primitive is a C function or an assembly snippet.
+2. The primitive is getting compiled to a relocatable object file using `-O3`
+3. Each ShellcodeStep combines all primitives and relocates them to the given base address
+
+## Requirements
+
+```
+sudo apt install gcc-9-mips-linux-gnu binutils-multiarch
+```
+
 ## Left todo
 
 | task                                                  | is it done |
