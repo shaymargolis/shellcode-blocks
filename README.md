@@ -18,16 +18,16 @@ A final "Shellcode Structure" example:
 
 ```python
 shellcodes = {
-	"first_shellcode": ShellcodeStep([
-		ShellcodePrimitive("memcpy", [src, dst, len]),
-		ShellcodePrimitive("jump_hook", [src, dst]),
-		ShellcodePrimitive("goto", [second_stage]),
-	], first_base_address),
-	"second_shellcode": ShellcodeStep([
-		ShellcodePrimitive("memcpy", [src, dst, len]),
-		ShellcodePrimitive("jump_hook", [src, dst]),
-		ShellcodePrimitive("goto", [third_stage]),
-	], second_base_address),
+    "first_shellcode": ShellcodeStep([
+        ShellcodePrimitive("memcpy", [src, dst, len]),
+        ShellcodePrimitive("jump_hook", [src, dst]),
+        ShellcodePrimitive("goto", [second_stage]),
+    ], first_base_address),
+    "second_shellcode": ShellcodeStep([
+        ShellcodePrimitive("memcpy", [src, dst, len]),
+        ShellcodePrimitive("jump_hook", [src, dst]),
+        ShellcodePrimitive("goto", [third_stage]),
+    ], second_base_address),
 }
 ```
 
