@@ -2,7 +2,7 @@ from subprocess import check_call
 from pathlib import Path
 
 
-sources_location = Path("/home/shay/Documents/Projects/Shellcode_Blocks/src")
+sources_location = Path(__file__).parent / "src"
 
 
 def check_call_print(*args, **kwargs):
