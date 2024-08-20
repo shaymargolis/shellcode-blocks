@@ -8,10 +8,13 @@ void __attribute__((noreturn)) memcpy(void) {
 
     u8 *end = src + len;
 
-    while (src < end) {
+    while (src < end - 1) {
         *dst = *src;
         src++;
+        dst++;
     }
+
+    *dst = *src;
 
     __builtin_unreachable();
 }
