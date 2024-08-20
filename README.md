@@ -59,3 +59,9 @@ sudo apt install gcc-9-mips-linux-gnu binutils-multiarch
 | How to link between memcpy in stage to the next stage | ☑          |
 | Units tests using unicorn or something?               | ☑          |
 
+
+## Known issues
+
+### Memcpy
+
+1. memcpy is not working for copylen=1
