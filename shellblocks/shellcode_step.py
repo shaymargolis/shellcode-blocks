@@ -41,6 +41,7 @@ class ShellcodeStep:
             *out_files,
             "-o", "shellcode.elf",
             "-nostdlib",
+            "-ffreestanding",
             f"-Wl,--section-start=.text={hex(self.base_address)}",
             f"-Wl,-T{ldscript_loc}"
         ], cwd=build_dir.as_posix())

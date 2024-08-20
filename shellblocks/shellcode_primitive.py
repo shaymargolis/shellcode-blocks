@@ -48,6 +48,8 @@ class ShellcodePrimitive:
 
         check_call_print([
             "mips-linux-gnu-gcc-9",
+            "-nostdlib",
+            "-ffreestanding",
             "-c", self.sources[0],
             "-o", "final.o",
             "-O3"
