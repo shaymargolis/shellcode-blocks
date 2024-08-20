@@ -17,18 +17,25 @@ For starters, we will only support MIPS (le/be).
 A final "Shellcode Structure" example:
 
 ```python
-shellcodes = {
-	"first_shellcode": ShellcodeStep([
-		ShellcodePrimitive("memcpy", [src, dst, len]),
-		ShellcodePrimitive("jump_hook", [src, dst]),
-		ShellcodePrimitive("goto", [second_stage]),
-	], first_base_address),
-	"second_shellcode": ShellcodeStep([
-		ShellcodePrimitive("memcpy", [src, dst, len]),
-		ShellcodePrimitive("jump_hook", [src, dst]),
-		ShellcodePrimitive("goto", [third_stage]),
-	], second_base_address),
-}
+first_step = ShellcodeStep(
+    "first_step",
+    0xbfc00000,
+    [
+        ShellcodePrimitiveMemcpy("copy_next_stage", 0x80abcdef, 0x8f0ed0b0, 0x100),
+        ShellcodePrimitivePrint("print_debug", 0x80901234, "This is a print!\\n"),
+        ShellcodePrimitiveJumpHook("put_jmp_hook", 0x80901234, 0x8f0ed0b0),
+        ShellcodePrimitiveGoto("goto_next_stage", 0x801bc00f),
+    ],
+    0x1000
+)
+
+# This returns a final shellcode (raw bin), which relocation address is 0xbfc00000,
+# That:
+# 1. Copies 0x100 bytes from 0x80abcdef to 0x8f0ed0b0
+# 2. Prints "This is a print!" using printf func at 0x80901234
+# 3. Puts jump hook on 0x80901234, that will jump to 0x8f0ed0b0
+# 4. Jumps to 0x801bc00f
+first_step_out = first_step.generate(Path("/tmp/build") / step.nickname)
 ```
 
 ## Left todo
@@ -36,7 +43,7 @@ shellcodes = {
 | task                                                  | is it done |
 |-----------------------------------------------------  |------------|
 | Gemerate example shellcode step using primitives      | ☑          |
-| Generate shellcodes using python script without make  | ☐          |
-| How to link between memcpy in stage to the next stage | ☐          |
+| Generate shellcodes using python script without make  | ☑          |
+| How to link between memcpy in stage to the next stage | ☑          |
 | Units tests using unicorn or something?               | ☐          |
 
