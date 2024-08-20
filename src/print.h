@@ -1,7 +1,0 @@
-#ifndef SHELLCODE_BLOCKS_PRINT_H
-#define SHELLCODE_BLOCKS_PRINT_H
-
-#define PRINT_FUNCTION_ADDRESS (0x8abcdef2)
-#define PRINT_STRING "Hi this is debug!\n"
-
-#endif // !SHELLCODE_BLOCKS_PRINT_H
