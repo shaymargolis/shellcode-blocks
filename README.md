@@ -22,7 +22,7 @@ first_step = ShellcodeStep(
     0xbfc00000,
     [
         ShellcodePrimitiveMemcpy("copy_next_stage", 0x80abcdef, 0x8f0ed0b0, 0x100),
-        ShellcodePrimitivePrint("print_debug", 0x80901234, "This is a print!\\n"),
+        ShellcodePrimitivePrint("print_debug", 0x80901234, "This is a print!\n"),
         ShellcodePrimitiveJumpHook("put_jmp_hook", 0x80901234, 0x8f0ed0b0),
         ShellcodePrimitiveGoto("goto_next_stage", 0x801bc00f),
     ],
