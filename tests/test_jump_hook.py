@@ -16,7 +16,7 @@ SECTOR_SIZE = 0x2000
     0x91000118,
 ])
 @pytest.mark.parametrize('jump_hook_goto', [
-    0x81000020,
+    0x81002020,
     0xbc002020,
     0xbcf00070,
     0x910f0218,
@@ -53,8 +53,6 @@ def test_jump_hook_sanity(temp_dir_path, jump_hook_location, jump_hook_goto):
         ]
     ))
 
-    end_of_code = shellcode.find(EXPECTED_HOOK)
-
     # Try to run shellcode
     # --------------------
 
@@ -67,7 +65,7 @@ def test_jump_hook_sanity(temp_dir_path, jump_hook_location, jump_hook_goto):
     mu.mem_write(jump_hook_sector, b"\x00" * 0x1000)
 
     # emulate code in infinite time & unlimited instructions
-    mu.emu_start(shellcode_address, shellcode_address + end_of_code)
+    mu.emu_start(shellcode_address, shellcode_address + len(shellcode))
 
     assert mu.mem_read(jump_hook_location, len(EXPECTED_HOOK)) == EXPECTED_HOOK
     assert mu.mem_read(jump_hook_location+len(EXPECTED_HOOK), 1) == (b"\x00")
