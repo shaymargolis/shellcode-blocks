@@ -15,8 +15,6 @@ class ShellcodeStep:
 
     def generate(self, build_dir: Path):
         # Create build dir
-        build_dir = Path("/tmp/build") / self.nickname
-
         try:
             shutil.rmtree(build_dir.as_posix())
         except FileNotFoundError:

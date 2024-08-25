@@ -13,7 +13,11 @@ class ShellcodePrimitivePrint(ShellcodePrimitive):
         self.print_string = print_string
 
     def header_requirements(self):
+        string_c_format = self.print_string.encode(
+            "unicode_escape"
+        ).decode("utf-8")
+
         return {
             "PRINT_FUNCTION_ADDRESS": self.print_function,
-            "PRINT_STRING": self.print_string,
+            "PRINT_STRING": string_c_format,
         }
