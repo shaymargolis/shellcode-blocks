@@ -1,6 +1,7 @@
 #include "goto.h"
 
-goto:
+.global start
+start:
     lui $v0, %hi(GOTO_ADDRESS)
     addiu $v0, %lo(GOTO_ADDRESS)
     nop
