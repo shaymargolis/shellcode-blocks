@@ -8,7 +8,7 @@ const u32 opcodes[] = {
     0x00000000,                                     // nop
 };
 
-void __attribute__((noreturn)) jump_hook(void) {
+void __attribute__((noreturn)) start(void) {
     u32 *hook_address = (u32 *)JUMP_HOOK_HOOK_ADDRESS;
 
     for (int i = 0; i < sizeof(opcodes) / sizeof(opcodes[0]); i++) {

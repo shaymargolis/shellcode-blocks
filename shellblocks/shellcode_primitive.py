@@ -55,4 +55,10 @@ class ShellcodePrimitive:
             "-O3"
         ], cwd=path.as_posix())
 
+        check_call_print([
+            "objcopy",
+            f"--redefine-sym=start={self.nickname}",
+            "final.o"
+        ], cwd=path.as_posix())
+
         return path / "final.o"
