@@ -24,6 +24,11 @@ strings_to_print = [
 ]
 
 
+@pytest.fixture()
+def stack_address():
+    return 0x80001000
+
+
 @pytest.fixture(params=print_function_addrs)
 def print_function_addr(request):
     return request.param
@@ -55,12 +60,16 @@ def print_shellcode(temp_dir_path, print_function_addr, string_to_print):
     return shellcode, shellcode_address
 
 
-def get_print_mu(print_shellcode, shellcode_run_addr, print_function_addr, string_to_print):
+def get_print_mu(
+        print_shellcode,
+        shellcode_run_addr,
+        print_function_addr,
+        string_to_print,
+        stack_address):
     shellcode, shellcode_address = print_shellcode
 
     print_function_sector = int(print_function_addr/SECTOR_SIZE) * SECTOR_SIZE
     shellcode_run_sector = int(shellcode_run_addr/SECTOR_SIZE) * SECTOR_SIZE
-    stack_address = 0x80001000
 
     # Try to run shellcode
     # --------------------
@@ -82,11 +91,15 @@ def get_print_mu(print_shellcode, shellcode_run_addr, print_function_addr, strin
 
 
 def test_print_reaches_print_function(
-    print_shellcode, string_to_print, print_function_addr
+    print_shellcode, string_to_print, print_function_addr, stack_address
 ):
     shellcode, shellcode_address = print_shellcode
     print_mu = get_print_mu(
-        print_shellcode, shellcode_address, print_function_addr, string_to_print
+        print_shellcode,
+        shellcode_address,
+        print_function_addr,
+        string_to_print,
+        stack_address
     )
 
     print_mu.emu_start(shellcode_address, print_function_addr)
@@ -101,15 +114,25 @@ def test_print_reaches_print_function(
     assert string_value == string_to_print.encode() + b"\x00"
 
 
-def test_print_reaches_end(print_shellcode, print_function_addr, string_to_print):
+def test_print_reaches_end(
+        print_shellcode,
+        print_function_addr,
+        string_to_print,
+        stack_address):
     shellcode, shellcode_address = print_shellcode
     print_mu = get_print_mu(
-        print_shellcode, shellcode_address, print_function_addr, string_to_print
+        print_shellcode,
+        shellcode_address,
+        print_function_addr,
+        string_to_print,
+        stack_address
     )
 
     end_of_code = shellcode.find(string_to_print.encode())
 
     print_mu.emu_start(shellcode_address, shellcode_address + end_of_code)
+
+    assert (stack_address + 0x2000) == print_mu.reg_read(UC_MIPS_REG_29)
 
 
 @pytest.mark.parametrize('shellcode_run_addr', [
@@ -122,11 +145,16 @@ def test_print_is_pic(
     shellcode_run_addr,
     print_shellcode,
     print_function_addr,
-    string_to_print
+    string_to_print,
+    stack_address
 ):
     shellcode, shellcode_address = print_shellcode
     print_mu = get_print_mu(
-        print_shellcode, shellcode_run_addr, print_function_addr, string_to_print
+        print_shellcode,
+        shellcode_run_addr,
+        print_function_addr,
+        string_to_print,
+        stack_address
     )
 
     end_of_code = shellcode.find(string_to_print.encode())
