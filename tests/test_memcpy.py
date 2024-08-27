@@ -90,6 +90,35 @@ def test_memcpy_sanity(temp_dir_path, default_memcpy_helper, copy_len):
     assert helper.mu.mem_read(helper.second_copy_addr + copy_len, 1) == b"\x00"
 
 
+@pytest.mark.parametrize('shellcode_run_addr', [
+    (0x83000010),
+    (0xbc000010),
+    (0xbcf00010),
+    (0x91000118),
+])
+def test_memcpy_is_pic(temp_dir_path, shellcode_run_addr, default_memcpy_helper):
+    copy_len = 0x1000
+    helper = default_memcpy_helper
+    shellcode = memcpy_get_shellcode(temp_dir_path, helper, copy_len)
+
+    shellcode_run_sector = int(shellcode_run_addr/SECTOR_SIZE) * SECTOR_SIZE
+    helper.mu.mem_map(shellcode_run_sector, SECTOR_SIZE)
+
+    # Try to run shellcode
+    # --------------------
+
+    # write machine code to be emulated to memory
+    helper.mu.mem_write(shellcode_run_addr, shellcode)
+    helper.mu.mem_write(helper.first_copy_addr, b"\xAA" * copy_len)
+    helper.mu.mem_write(helper.second_copy_addr, b"\x00" * copy_len)
+
+    helper.mu.emu_start(shellcode_run_addr, shellcode_run_addr + len(shellcode))
+
+    assert helper.mu.mem_read(helper.second_copy_addr - 1, 1) == b"\x00"
+    assert helper.mu.mem_read(helper.second_copy_addr, copy_len) == (b"\xAA" * copy_len)
+    assert helper.mu.mem_read(helper.second_copy_addr + copy_len, 1) == b"\x00"
+
+
 @pytest.mark.parametrize('copy_len', [
     100,
     200,
