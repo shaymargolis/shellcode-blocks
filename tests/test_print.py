@@ -128,9 +128,7 @@ def test_print_reaches_end(
         stack_address
     )
 
-    end_of_code = shellcode.find(string_to_print.encode())
-
-    print_mu.emu_start(shellcode_address, shellcode_address + end_of_code)
+    print_mu.emu_start(shellcode_address, shellcode_address + len(shellcode))
 
     assert (stack_address + 0x2000) == print_mu.reg_read(UC_MIPS_REG_29)
 
@@ -157,6 +155,4 @@ def test_print_is_pic(
         stack_address
     )
 
-    end_of_code = shellcode.find(string_to_print.encode())
-
-    print_mu.emu_start(shellcode_run_addr, shellcode_run_addr + end_of_code)
+    print_mu.emu_start(shellcode_run_addr, shellcode_run_addr + len(shellcode))

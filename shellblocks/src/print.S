@@ -2,8 +2,11 @@
 
 .global start
 start:
+    // Save $ra
     addiu $sp, -4
     sw $ra, 0($sp)
+
+    // Get $pc using bal
     bal code
     nop
 code:
@@ -16,9 +19,18 @@ code:
     jalr $v0
     nop
 
+    // Restore $ra
     lw $ra, 0($sp)
     addiu $sp, 4
     nop
 
+    // Jump over the printed string, to ensure we can run
+    // another primitive after this one.
+    b end_of_code
+
 print_string:
     .asciiz PRINT_STRING
+    .align 2
+
+end_of_code:
+    nop
