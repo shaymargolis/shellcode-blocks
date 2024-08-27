@@ -24,7 +24,7 @@ class ShellcodePrimitive:
             if isinstance(val, int):
                 contents += [f"#define {key} ({hex(val)})"]
             elif isinstance(val, str):
-                contents += [f"#define {key} (\"{val}\")"]
+                contents += [f"#define {key} \"{val}\""]
             else:
                 raise Exception(f"Cannot write header! Bad type {type(val)}")
 
