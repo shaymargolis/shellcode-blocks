@@ -1,5 +1,6 @@
 from shellblocks.shellcode_primitive import ShellcodePrimitive
 
+
 class ShellcodePrimitiveMemcpy(ShellcodePrimitive):
     def __init__(self, nickname: str, src_addr: int, dst_addr: int, cpy_len: int):
         super().__init__(

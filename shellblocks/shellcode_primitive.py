@@ -30,7 +30,7 @@ class ShellcodePrimitive:
 
         contents += [""]
         contents += [f"#endif // !{header_define}"]
-        contents += [""] # Empty line at EOF
+        contents += [""]  # Empty line at EOF
 
         header_path.write_text("\n".join(contents))
 
