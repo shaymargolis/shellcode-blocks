@@ -1,10 +1,8 @@
 import pytest
 
-from unicorn import *
-from unicorn.mips_const import *
-
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.memcpy import ShellcodePrimitiveMemcpy
+
 
 def test_step_too_large_fails(temp_dir_path):
     step = ShellcodeStep(
@@ -22,5 +20,5 @@ def test_step_too_large_fails(temp_dir_path):
         0x10
     )
 
-    with pytest.raises(Exception) as e_info:
-        out_file = step.generate(temp_dir_path / step.nickname)
+    with pytest.raises(Exception):
+        step.generate(temp_dir_path / step.nickname)

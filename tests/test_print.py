@@ -1,7 +1,7 @@
 import pytest
 
-from unicorn import *
-from unicorn.mips_const import *
+from unicorn import Uc, UC_ARCH_MIPS, UC_MODE_32, UC_MODE_BIG_ENDIAN
+from unicorn.mips_const import UC_MIPS_REG_PC, UC_MIPS_REG_29, UC_MIPS_REG_4
 
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.print import ShellcodePrimitivePrint
@@ -76,7 +76,7 @@ def print_mu(print_shellcode, print_function_addr, string_to_print):
 
     # write machine code to be emulated to memory
     mu.mem_write(shellcode_address, shellcode)
-    mu.mem_write(print_function_addr, (0x03e00008).to_bytes(4, 'big')) # "jr $ra" in MIPS
+    mu.mem_write(print_function_addr, (0x03e00008).to_bytes(4, 'big'))  # "jr $ra" in MIPS
 
     return mu
 
@@ -90,7 +90,7 @@ def test_print_reaches_print_function(
     assert print_function_addr == print_mu.reg_read(UC_MIPS_REG_PC)
 
     # Check print string
-    a0_reg_value = print_mu.reg_read(UC_MIPS_REG_4) # First func argument
+    a0_reg_value = print_mu.reg_read(UC_MIPS_REG_4)  # First func argument
     string_value = bytes(
         print_mu.mem_read(a0_reg_value, len(string_to_print) + 1)
     )

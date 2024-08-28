@@ -1,7 +1,6 @@
 import pytest
 
-from unicorn import *
-from unicorn.mips_const import *
+from unicorn import Uc, UC_ARCH_MIPS, UC_MODE_32, UC_MODE_BIG_ENDIAN
 
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.memcpy import ShellcodePrimitiveMemcpy
@@ -12,9 +11,9 @@ SECTOR_SIZE = 0x2000
 
 class UcMemcpyHelper:
     def __init__(self,
-            shellcode_address,
-            first_copy_addr,
-            second_copy_addr):
+                 shellcode_address,
+                 first_copy_addr,
+                 second_copy_addr):
         self.shellcode_address = shellcode_address
 
         self.first_copy_addr = first_copy_addr
