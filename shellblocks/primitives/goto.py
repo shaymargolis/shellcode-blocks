@@ -1,5 +1,6 @@
 from shellblocks.shellcode_primitive import ShellcodePrimitive
 
+
 class ShellcodePrimitiveGoto(ShellcodePrimitive):
     def __init__(self, nickname: str, goto_address: int):
         super().__init__(

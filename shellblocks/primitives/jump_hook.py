@@ -1,5 +1,6 @@
 from shellblocks.shellcode_primitive import ShellcodePrimitive
 
+
 class ShellcodePrimitiveJumpHook(ShellcodePrimitive):
     def __init__(self, nickname: str, hook_address: int, goto_address: int):
         super().__init__(

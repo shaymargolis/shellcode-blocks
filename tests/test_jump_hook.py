@@ -1,7 +1,6 @@
 import pytest
 
-from unicorn import *
-from unicorn.mips_const import *
+from unicorn import Uc, UC_ARCH_MIPS, UC_MODE_32, UC_MODE_BIG_ENDIAN
 
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.jump_hook import ShellcodePrimitiveJumpHook

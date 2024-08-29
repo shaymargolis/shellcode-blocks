@@ -1,7 +1,7 @@
 import pytest
 
-from unicorn import *
-from unicorn.mips_const import *
+from unicorn import Uc, UC_ARCH_MIPS, UC_MODE_32, UC_MODE_BIG_ENDIAN
+from unicorn.mips_const import UC_MIPS_REG_PC
 
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.goto import ShellcodePrimitiveGoto

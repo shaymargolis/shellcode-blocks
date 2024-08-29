@@ -1,5 +1,6 @@
 from shellblocks.shellcode_primitive import ShellcodePrimitive
 
+
 class ShellcodePrimitivePrint(ShellcodePrimitive):
     def __init__(self, nickname: str, print_function: int, print_string: str):
         super().__init__(
