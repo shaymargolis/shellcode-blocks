@@ -1,5 +1,9 @@
 # Shellcode Blocks
 
+## build status [![Python application](https://github.com/shaymargolis/shellcode-blocks/actions/workflows/python-app.yml/badge.svg)](https://github.com/shaymargolis/shellcode-blocks/actions/workflows/python-app.yml)
+
+## What is this repo?
+
 This repo allows you to concatenate shellcodes, running from different address spaces and links between them.
 Each shellcode will ensure the next will run, and will constitute from various primitives.
 
