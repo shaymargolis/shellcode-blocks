@@ -24,6 +24,11 @@ strings_to_print = [
 ]
 
 
+@pytest.fixture()
+def stack_address():
+    return 0x80001000
+
+
 @pytest.fixture(params=print_function_addrs)
 def print_function_addr(request):
     return request.param
@@ -55,12 +60,16 @@ def print_shellcode(temp_dir_path, print_function_addr, string_to_print):
     return shellcode, shellcode_address
 
 
-@pytest.fixture()
-def print_mu(print_shellcode, print_function_addr, string_to_print):
+def get_print_mu(
+        print_shellcode,
+        shellcode_run_addr,
+        print_function_addr,
+        string_to_print,
+        stack_address):
     shellcode, shellcode_address = print_shellcode
 
     print_function_sector = int(print_function_addr/SECTOR_SIZE) * SECTOR_SIZE
-    stack_address = 0x80001000
+    shellcode_run_sector = int(shellcode_run_addr/SECTOR_SIZE) * SECTOR_SIZE
 
     # Try to run shellcode
     # --------------------
@@ -70,21 +79,28 @@ def print_mu(print_shellcode, print_function_addr, string_to_print):
     # Print function uses the stack pointer
     mu.reg_write(UC_MIPS_REG_29, stack_address + 0x2000)
 
-    mu.mem_map(shellcode_address, 0x2000)
+    mu.mem_map(shellcode_run_sector, 0x2000)
     mu.mem_map(print_function_sector, 0x2000)
     mu.mem_map(stack_address, 0x2000)
 
     # write machine code to be emulated to memory
-    mu.mem_write(shellcode_address, shellcode)
+    mu.mem_write(shellcode_run_addr, shellcode)
     mu.mem_write(print_function_addr, (0x03e00008).to_bytes(4, 'big'))  # "jr $ra" in MIPS
 
     return mu
 
 
 def test_print_reaches_print_function(
-    print_mu, print_shellcode, string_to_print, print_function_addr
+    print_shellcode, string_to_print, print_function_addr, stack_address
 ):
     shellcode, shellcode_address = print_shellcode
+    print_mu = get_print_mu(
+        print_shellcode,
+        shellcode_address,
+        print_function_addr,
+        string_to_print,
+        stack_address
+    )
 
     print_mu.emu_start(shellcode_address, print_function_addr)
     assert print_function_addr == print_mu.reg_read(UC_MIPS_REG_PC)
@@ -98,9 +114,45 @@ def test_print_reaches_print_function(
     assert string_value == string_to_print.encode() + b"\x00"
 
 
-def test_print_reaches_end(print_mu, print_shellcode, string_to_print):
+def test_print_reaches_end(
+        print_shellcode,
+        print_function_addr,
+        string_to_print,
+        stack_address):
     shellcode, shellcode_address = print_shellcode
+    print_mu = get_print_mu(
+        print_shellcode,
+        shellcode_address,
+        print_function_addr,
+        string_to_print,
+        stack_address
+    )
 
-    end_of_code = shellcode.find(string_to_print.encode())
+    print_mu.emu_start(shellcode_address, shellcode_address + len(shellcode))
 
-    print_mu.emu_start(shellcode_address, shellcode_address + end_of_code)
+    assert (stack_address + 0x2000) == print_mu.reg_read(UC_MIPS_REG_29)
+
+
+@pytest.mark.parametrize('shellcode_run_addr', [
+    (0x83000010),
+    (0xbc300010),
+    (0xbcf30010),
+    (0x92000118),
+])
+def test_print_is_pic(
+    shellcode_run_addr,
+    print_shellcode,
+    print_function_addr,
+    string_to_print,
+    stack_address
+):
+    shellcode, shellcode_address = print_shellcode
+    print_mu = get_print_mu(
+        print_shellcode,
+        shellcode_run_addr,
+        print_function_addr,
+        string_to_print,
+        stack_address
+    )
+
+    print_mu.emu_start(shellcode_run_addr, shellcode_run_addr + len(shellcode))
