@@ -1,4 +1,7 @@
 #include "print.h"
+#include "utils_asm.h"
+
+.set noreorder
 
 .global start
 start:
@@ -6,13 +9,10 @@ start:
     addiu $sp, -4
     sw $ra, 0($sp)
 
-    // Get $pc using bal
-    bal code
-    nop
-code:
-    // bal somehow compiles to "bal + nop" so 2 opcodes
-    addiu $a0, $ra, (print_string - code + 4)
-    nop
+    // Calculate address of `print_string`
+    // relative to current $pc
+    GET_PC($v0)
+    GET_ADDRESS($a0, print_string, $v0)
 
     lui $v0, %hi(PRINT_FUNCTION_ADDRESS)
     addiu $v0, %lo(PRINT_FUNCTION_ADDRESS)
@@ -27,6 +27,7 @@ code:
     // Jump over the printed string, to ensure we can run
     // another primitive after this one.
     b end_of_code
+    nop
 
 print_string:
     .asciiz PRINT_STRING
@@ -34,3 +35,4 @@ print_string:
 
 end_of_code:
     nop
+

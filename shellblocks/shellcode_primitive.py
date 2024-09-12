@@ -50,6 +50,7 @@ class ShellcodePrimitive:
             "mips-linux-gnu-gcc-9",
             "-nostdlib",
             "-ffreestanding",
+            "-mno-shared",
             "-c", self.sources[0],
             "-o", "final.o",
             "-O3"

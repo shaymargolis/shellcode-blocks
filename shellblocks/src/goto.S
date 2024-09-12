@@ -1,5 +1,7 @@
 #include "goto.h"
 
+.set noreorder
+
 .global start
 start:
     lui $v0, %hi(GOTO_ADDRESS)
