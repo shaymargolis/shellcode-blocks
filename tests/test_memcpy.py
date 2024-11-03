@@ -1,7 +1,5 @@
 import pytest
 
-from unicorn import Uc, UC_ARCH_MIPS, UC_MODE_32, UC_MODE_BIG_ENDIAN
-
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.memcpy import ShellcodePrimitiveMemcpy
 
@@ -11,6 +9,7 @@ SECTOR_SIZE = 0x2000
 
 class UcMemcpyHelper:
     def __init__(self,
+                 get_mu,
                  shellcode_address,
                  first_copy_addr,
                  second_copy_addr):
@@ -22,7 +21,7 @@ class UcMemcpyHelper:
         self.second_copy_addr = second_copy_addr
         self.second_sector = int(self.second_copy_addr/SECTOR_SIZE) * SECTOR_SIZE
 
-        self.mu = Uc(UC_ARCH_MIPS, UC_MODE_32 | UC_MODE_BIG_ENDIAN)
+        self.mu = get_mu()
         self.mu.mem_map(self.shellcode_address, SECTOR_SIZE)
         self.mu.mem_map(self.first_sector, SECTOR_SIZE)
         self.mu.mem_map(self.second_sector, SECTOR_SIZE)
@@ -32,15 +31,16 @@ class UcMemcpyHelper:
 
 
 @pytest.fixture(scope='function')
-def default_memcpy_helper():
+def default_memcpy_helper(get_mu):
     return UcMemcpyHelper(
+        get_mu,
         0xbfc00000,
         0x81000010,
         0x82000010
     )
 
 
-def memcpy_get_shellcode(temp_dir_path, memcpy_helper, copy_len):
+def memcpy_get_shellcode(temp_dir_path, compiler_arch, memcpy_helper, copy_len):
     helper = memcpy_helper
 
     step = ShellcodeStep(
@@ -57,7 +57,7 @@ def memcpy_get_shellcode(temp_dir_path, memcpy_helper, copy_len):
         0x1000
     )
 
-    out_file = step.generate(temp_dir_path / step.nickname)
+    out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)
     shellcode = out_file.read_bytes()
 
     return shellcode
@@ -71,9 +71,9 @@ def memcpy_get_shellcode(temp_dir_path, memcpy_helper, copy_len):
     3,
     100
 ])
-def test_memcpy_sanity(temp_dir_path, default_memcpy_helper, copy_len):
+def test_memcpy_sanity(temp_dir_path, compiler_arch, default_memcpy_helper, copy_len):
     helper = default_memcpy_helper
-    shellcode = memcpy_get_shellcode(temp_dir_path, helper, copy_len)
+    shellcode = memcpy_get_shellcode(temp_dir_path, compiler_arch, helper, copy_len)
 
     # Try to run shellcode
     # --------------------
@@ -96,10 +96,10 @@ def test_memcpy_sanity(temp_dir_path, default_memcpy_helper, copy_len):
     (0xbcf00010),
     (0x91000118),
 ])
-def test_memcpy_is_pic(temp_dir_path, shellcode_run_addr, default_memcpy_helper):
+def test_memcpy_is_pic(temp_dir_path, compiler_arch, shellcode_run_addr, default_memcpy_helper):
     copy_len = 0x1000
     helper = default_memcpy_helper
-    shellcode = memcpy_get_shellcode(temp_dir_path, helper, copy_len)
+    shellcode = memcpy_get_shellcode(temp_dir_path, compiler_arch, helper, copy_len)
 
     shellcode_run_sector = int(shellcode_run_addr/SECTOR_SIZE) * SECTOR_SIZE
     helper.mu.mem_map(shellcode_run_sector, SECTOR_SIZE)
@@ -127,10 +127,10 @@ def test_memcpy_is_pic(temp_dir_path, shellcode_run_addr, default_memcpy_helper)
     3,
     100
 ])
-def test_memcpy_short(temp_dir_path, default_memcpy_helper, copy_len):
+def test_memcpy_short(temp_dir_path, compiler_arch, default_memcpy_helper, copy_len):
 
     helper = default_memcpy_helper
-    shellcode = memcpy_get_shellcode(temp_dir_path, helper, copy_len)
+    shellcode = memcpy_get_shellcode(temp_dir_path, compiler_arch, helper, copy_len)
 
     # Try to run shellcode
     # --------------------
@@ -155,11 +155,11 @@ def test_memcpy_short(temp_dir_path, default_memcpy_helper, copy_len):
     4,
     100
 ])
-def test_memcpy_two_halves(temp_dir_path, default_memcpy_helper, copy_len):
+def test_memcpy_two_halves(temp_dir_path, compiler_arch, default_memcpy_helper, copy_len):
     half_copy_len = int(copy_len/2)
 
     helper = default_memcpy_helper
-    shellcode = memcpy_get_shellcode(temp_dir_path, helper, copy_len)
+    shellcode = memcpy_get_shellcode(temp_dir_path, compiler_arch, helper, copy_len)
 
     # Try to run shellcode
     # --------------------

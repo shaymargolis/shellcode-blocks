@@ -1,7 +1,5 @@
 import pytest
 
-from unicorn import Uc, UC_ARCH_MIPS, UC_MODE_32, UC_MODE_BIG_ENDIAN
-
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.jump_hook import ShellcodePrimitiveJumpHook
 
@@ -27,7 +25,15 @@ SECTOR_SIZE = 0x2000
     0xbcf00070,
     0x910f0218,
 ])
-def test_jump_hook_sanity(temp_dir_path, shellcode_run_addr, jump_hook_location, jump_hook_goto):
+def test_jump_hook_sanity(
+    get_mu,
+    arch_helper,
+    temp_dir_path,
+    compiler_arch,
+    shellcode_run_addr,
+    jump_hook_location,
+    jump_hook_goto
+):
     # Generate shellcode
     # ------------------
     shellcode_address = 0xbfc00000
@@ -47,23 +53,15 @@ def test_jump_hook_sanity(temp_dir_path, shellcode_run_addr, jump_hook_location,
         0x1000
     )
 
-    out_file = step.generate(temp_dir_path / step.nickname)
+    out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)
     shellcode = out_file.read_bytes()
 
-    EXPECTED_HOOK = b"".join(map(
-        lambda x: x.to_bytes(4, 'big'),
-        [
-            0x3c020000 + (jump_hook_goto >> 16),
-            0x24420000 + (jump_hook_goto & 0xffff),
-            0x00400008,
-            0x00000000,
-        ]
-    ))
+    EXPECTED_HOOK = arch_helper.get_jump_hook_bytes(jump_hook_goto)
 
     # Try to run shellcode
     # --------------------
 
-    mu = Uc(UC_ARCH_MIPS, UC_MODE_32 | UC_MODE_BIG_ENDIAN)
+    mu = get_mu()
     mu.mem_map(shellcode_run_sector, 0x2000)
     mu.mem_map(jump_hook_sector, 0x2000)
 
