@@ -2,8 +2,9 @@ import shutil
 from pathlib import Path
 
 
+from shellblocks.compiler_arch import CompilerArch
 from shellblocks.shellcode_primitive import ShellcodePrimitive
-from shellblocks.utils import check_call_print, sources_location
+from shellblocks.utils import check_call_print
 
 
 class ShellcodeStep:
@@ -13,7 +14,7 @@ class ShellcodeStep:
         self.primitives = primitives
         self.max_len = max_len
 
-    def generate(self, build_dir: Path):
+    def generate(self, build_dir: Path, compiler: CompilerArch):
         # Create build dir
         try:
             shutil.rmtree(build_dir.as_posix())
@@ -29,20 +30,14 @@ class ShellcodeStep:
             p_build_dir = build_dir / p.nickname
             p_build_dir.mkdir()
 
-            out_file = p.generate(p_build_dir)
+            out_file = p.generate(p_build_dir, compiler)
             out_files.append(out_file.as_posix())
 
         # Join all primitives to final shellcode
-        ldscript_loc = (sources_location / "shellcode_ldscript.ld").as_posix()
-        check_call_print([
-            "mips-linux-gnu-gcc-9",
-            *out_files,
-            "-o", "shellcode.elf",
-            "-nostdlib",
-            "-ffreestanding",
-            f"-Wl,--section-start=.text={hex(self.base_address)}",
-            f"-Wl,-T{ldscript_loc}"
-        ], cwd=build_dir.as_posix())
+        check_call_print(
+            compiler.compile_step(out_files, self.base_address),
+            cwd=build_dir.as_posix()
+        )
 
         check_call_print([
             "objcopy",
