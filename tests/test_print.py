@@ -1,6 +1,5 @@
 import pytest
 
-from unicorn import Uc, UC_ARCH_MIPS, UC_MODE_32, UC_MODE_BIG_ENDIAN
 from unicorn.mips_const import UC_MIPS_REG_PC, UC_MIPS_REG_29, UC_MIPS_REG_4
 
 from shellblocks.shellcode_step import ShellcodeStep
@@ -40,7 +39,7 @@ def string_to_print(request):
 
 
 @pytest.fixture()
-def print_shellcode(temp_dir_path, print_function_addr, string_to_print):
+def print_shellcode(compiler_arch, temp_dir_path, print_function_addr, string_to_print):
     # Generate shellcode
     # ------------------
     shellcode_address = 0xbfc00000
@@ -54,13 +53,15 @@ def print_shellcode(temp_dir_path, print_function_addr, string_to_print):
         0x1000
     )
 
-    out_file = step.generate(temp_dir_path / step.nickname)
+    out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)
     shellcode = out_file.read_bytes()
 
     return shellcode, shellcode_address
 
 
 def get_print_mu(
+        get_mu,
+        arch_helper,
         print_shellcode,
         shellcode_run_addr,
         print_function_addr,
@@ -74,7 +75,7 @@ def get_print_mu(
     # Try to run shellcode
     # --------------------
 
-    mu = Uc(UC_ARCH_MIPS, UC_MODE_32 | UC_MODE_BIG_ENDIAN)
+    mu = get_mu()
 
     # Print function uses the stack pointer
     mu.reg_write(UC_MIPS_REG_29, stack_address + 0x2000)
@@ -85,16 +86,18 @@ def get_print_mu(
 
     # write machine code to be emulated to memory
     mu.mem_write(shellcode_run_addr, shellcode)
-    mu.mem_write(print_function_addr, (0x03e00008).to_bytes(4, 'big'))  # "jr $ra" in MIPS
+    mu.mem_write(print_function_addr, arch_helper.get_ret_bytes())
 
     return mu
 
 
 def test_print_reaches_print_function(
-    print_shellcode, string_to_print, print_function_addr, stack_address
+    get_mu, arch_helper, print_shellcode, string_to_print, print_function_addr, stack_address
 ):
     shellcode, shellcode_address = print_shellcode
     print_mu = get_print_mu(
+        get_mu,
+        arch_helper,
         print_shellcode,
         shellcode_address,
         print_function_addr,
@@ -115,12 +118,16 @@ def test_print_reaches_print_function(
 
 
 def test_print_reaches_end(
+        get_mu,
+        arch_helper,
         print_shellcode,
         print_function_addr,
         string_to_print,
         stack_address):
     shellcode, shellcode_address = print_shellcode
     print_mu = get_print_mu(
+        get_mu,
+        arch_helper,
         print_shellcode,
         shellcode_address,
         print_function_addr,
@@ -140,6 +147,8 @@ def test_print_reaches_end(
     (0x92000118),
 ])
 def test_print_is_pic(
+    get_mu,
+    arch_helper,
     shellcode_run_addr,
     print_shellcode,
     print_function_addr,
@@ -148,6 +157,8 @@ def test_print_is_pic(
 ):
     shellcode, shellcode_address = print_shellcode
     print_mu = get_print_mu(
+        get_mu,
+        arch_helper,
         print_shellcode,
         shellcode_run_addr,
         print_function_addr,

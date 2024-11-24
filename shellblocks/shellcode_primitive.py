@@ -1,6 +1,7 @@
 import shutil
 from pathlib import Path
 
+from shellblocks.compiler_arch import CompilerArch
 from shellblocks.utils import check_call_print, sources_location
 
 
@@ -37,7 +38,7 @@ class ShellcodePrimitive:
     def header_requirements(self):
         return {}
 
-    def generate(self, path: Path):
+    def generate(self, path: Path, compiler: CompilerArch):
         for source in self.sources:
             source_src = sources_location / source
             source_dst = path / source
@@ -46,15 +47,10 @@ class ShellcodePrimitive:
 
         self.generate_header_file(path)
 
-        check_call_print([
-            "mips-linux-gnu-gcc-9",
-            "-nostdlib",
-            "-ffreestanding",
-            "-mno-shared",
-            "-c", self.sources[0],
-            "-o", "final.o",
-            "-O3"
-        ], cwd=path.as_posix())
+        check_call_print(
+            compiler.compile_primitive(self.sources[0]),
+            cwd=path.as_posix()
+        )
 
         check_call_print([
             "objcopy",
