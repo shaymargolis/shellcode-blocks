@@ -6,7 +6,7 @@ setup(
     version="0.1",
     packages=find_packages(),
     install_requires=[
-       'unicorn',
+       'unicorn>=2.0,<2.1',
        'pytest',
     ],
     package_data={
