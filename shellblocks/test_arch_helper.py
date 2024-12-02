@@ -1,3 +1,5 @@
+from unicorn.mips_const import UC_MIPS_REG_PC, UC_MIPS_REG_29, UC_MIPS_REG_4
+
 from shellblocks.compiler_archs import CompilerArchOption
 
 
@@ -39,3 +41,18 @@ class MIPSHelper(ArchHelper):
             return val.to_bytes(4, 'little')
         else:
             raise NotImplementedError()
+
+    def get_curr_pc(self, mu):
+        return mu.reg_read(UC_MIPS_REG_PC)
+
+    def set_curr_sp(self, mu, new_stack):
+        mu.reg_write(UC_MIPS_REG_29, new_stack)
+
+    def get_curr_sp(self, mu):
+        return mu.reg_read(UC_MIPS_REG_29)
+
+    def get_curr_func_arg(self, mu, func_arg):
+        if func_arg == 0:
+            return mu.reg_read(UC_MIPS_REG_4)
+
+        raise NotImplementedError(f"Getting {func_arg} func arg")
