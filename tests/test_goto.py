@@ -13,6 +13,9 @@ SECTOR_SIZE = 0x2000
     (0x81000000, 0x81000010),
     (0xbc000000, 0xbc000010),
     (0xbc000000, 0xbcf00010),
+    # Case where the lower half is negative (0xfff0)
+    # should still work as expected
+    (0xbc00f000, 0xbcf0fff0),
     (0x91000000, 0x91000118),
 ])
 def test_goto_sanity(get_mu, temp_dir_path, compiler_arch, goto_page_and_address):
