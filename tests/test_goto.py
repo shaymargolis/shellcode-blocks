@@ -1,7 +1,5 @@
 import pytest
 
-from unicorn.mips_const import UC_MIPS_REG_PC
-
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.goto import ShellcodePrimitiveGoto
 
@@ -18,7 +16,7 @@ SECTOR_SIZE = 0x2000
     (0xbc00f000, 0xbcf0fff0),
     (0x91000000, 0x91000118),
 ])
-def test_goto_sanity(get_mu, temp_dir_path, compiler_arch, goto_page_and_address):
+def test_goto_sanity(get_mu, temp_dir_path, arch_helper, compiler_arch, goto_page_and_address):
     # Generate shellcode
     # ------------------
     shellcode_address = 0xbfc00000
@@ -47,7 +45,7 @@ def test_goto_sanity(get_mu, temp_dir_path, compiler_arch, goto_page_and_address
 
     mu.emu_start(shellcode_address, goto_address)
 
-    assert goto_address == mu.reg_read(UC_MIPS_REG_PC)
+    assert goto_address == arch_helper.get_curr_pc(mu)
 
 
 @pytest.mark.parametrize('shellcode_run_addr', [
@@ -56,7 +54,7 @@ def test_goto_sanity(get_mu, temp_dir_path, compiler_arch, goto_page_and_address
     (0xbcf00010),
     (0x91000118),
 ])
-def test_goto_is_pic(get_mu, temp_dir_path, compiler_arch, shellcode_run_addr):
+def test_goto_is_pic(get_mu, temp_dir_path, arch_helper, compiler_arch, shellcode_run_addr):
     # Generate shellcode
     # ------------------
     shellcode_address = 0xbfc00000
@@ -87,4 +85,4 @@ def test_goto_is_pic(get_mu, temp_dir_path, compiler_arch, shellcode_run_addr):
 
     mu.emu_start(shellcode_run_addr, goto_address)
 
-    assert goto_address == mu.reg_read(UC_MIPS_REG_PC)
+    assert goto_address == arch_helper.get_curr_pc(mu)
