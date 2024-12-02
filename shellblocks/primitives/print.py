@@ -1,4 +1,8 @@
+from pathlib import Path
+
 from shellblocks.shellcode_primitive import ShellcodePrimitive
+from shellblocks.compiler_arch import CompilerArch
+from shellblocks.compiler_archs import CompilerArchARMLE
 
 
 class ShellcodePrimitivePrint(ShellcodePrimitive):
@@ -22,3 +26,9 @@ class ShellcodePrimitivePrint(ShellcodePrimitive):
             "PRINT_FUNCTION_ADDRESS": self.print_function,
             "PRINT_STRING": string_c_format,
         }
+
+    def generate(self, path: Path, compiler: CompilerArch):
+        if isinstance(compiler, CompilerArchARMLE):
+            self.sources = ["print_arm.S", "utils_asm_arm.h"]
+
+        return super().generate(path, compiler)
