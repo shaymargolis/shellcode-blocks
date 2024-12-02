@@ -1,7 +1,5 @@
 import pytest
 
-from unicorn.mips_const import UC_MIPS_REG_PC, UC_MIPS_REG_29, UC_MIPS_REG_4
-
 from shellblocks.shellcode_step import ShellcodeStep
 from shellblocks.primitives.print import ShellcodePrimitivePrint
 
@@ -78,7 +76,7 @@ def get_print_mu(
     mu = get_mu()
 
     # Print function uses the stack pointer
-    mu.reg_write(UC_MIPS_REG_29, stack_address + 0x2000)
+    arch_helper.set_curr_sp(mu, stack_address + 0x2000)
 
     mu.mem_map(shellcode_run_sector, 0x2000)
     mu.mem_map(print_function_sector, 0x2000)
@@ -106,10 +104,10 @@ def test_print_reaches_print_function(
     )
 
     print_mu.emu_start(shellcode_address, print_function_addr)
-    assert print_function_addr == print_mu.reg_read(UC_MIPS_REG_PC)
+    assert print_function_addr == arch_helper.get_curr_pc(print_mu)
 
     # Check print string
-    a0_reg_value = print_mu.reg_read(UC_MIPS_REG_4)  # First func argument
+    a0_reg_value = arch_helper.get_curr_func_arg(print_mu, 0)  # First func argument
     string_value = bytes(
         print_mu.mem_read(a0_reg_value, len(string_to_print) + 1)
     )
@@ -137,7 +135,7 @@ def test_print_reaches_end(
 
     print_mu.emu_start(shellcode_address, shellcode_address + len(shellcode))
 
-    assert (stack_address + 0x2000) == print_mu.reg_read(UC_MIPS_REG_29)
+    assert (stack_address + 0x2000) == arch_helper.get_curr_sp(print_mu)
 
 
 @pytest.mark.parametrize('shellcode_run_addr', [
