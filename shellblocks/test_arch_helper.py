@@ -8,6 +8,26 @@ class ArchHelper:
         self.compiler_arch_option = compiler_arch_option
 
 
+class ARMHelper(ArchHelper):
+    def __init__(self, compiler_arch_option):
+        super().__init__(compiler_arch_option)
+
+        assert compiler_arch_option in [
+            CompilerArchOption.ARMLE,
+        ]
+
+    def get_jump_hook_bytes(self, jump_hook_goto):
+        raise NotImplementedError()
+
+    def get_ret_bytes(self):
+        val = 0xe12fff1e  # "bx lr" in ARM
+
+        if CompilerArchOption.ARMLE == self.compiler_arch_option:
+            return val.to_bytes(4, 'little')
+        else:
+            raise NotImplementedError()
+
+
 class MIPSHelper(ArchHelper):
     def __init__(self, compiler_arch_option):
         super().__init__(compiler_arch_option)
