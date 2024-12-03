@@ -5,6 +5,11 @@ from shellblocks.compiler_arch import CompilerArch
 from shellblocks.utils import check_call_print, sources_location
 
 
+def bytes_to_c_arr(data):
+    values = ",".join([format(b, '#04x') for b in data])
+    return '{' + values + '}'
+
+
 class ShellcodePrimitive:
     def __init__(self, nickname: str, sources: [str], code_file: str, header_file: str):
         self.nickname = nickname
@@ -26,6 +31,8 @@ class ShellcodePrimitive:
                 contents += [f"#define {key} ({hex(val)})"]
             elif isinstance(val, str):
                 contents += [f"#define {key} \"{val}\""]
+            elif isinstance(val, bytes):
+                contents += [f"#define {key} {bytes_to_c_arr(val)}"]
             else:
                 raise Exception(f"Cannot write header! Bad type {type(val)}")
 
