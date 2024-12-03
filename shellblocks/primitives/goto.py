@@ -5,8 +5,8 @@ class ShellcodePrimitiveGoto(ShellcodePrimitive):
     def __init__(self, nickname: str, goto_address: int):
         super().__init__(
             nickname,
-            ["goto.S"],
-            "goto.S",
+            ["goto.c", "utils.h"],
+            "goto.c",
             "goto.h"
         )
 
