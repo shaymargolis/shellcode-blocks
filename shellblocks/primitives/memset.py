@@ -5,7 +5,7 @@ class ShellcodePrimitiveMemset(ShellcodePrimitive):
     def __init__(self, nickname: str, dst_addr: int, set_bytes: bytes):
         super().__init__(
             nickname,
-            ["memset.c", "utils.h"],
+            ["memset.c", "utils.h", "arch/mips/utils.h"],
             "memset.c",
             "memset.h"
         )
