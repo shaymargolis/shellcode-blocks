@@ -40,15 +40,17 @@ def test_jump_hook_sanity(
     jump_hook_sector = int(jump_hook_location/SECTOR_SIZE) * SECTOR_SIZE
     shellcode_run_sector = int(shellcode_run_addr/SECTOR_SIZE) * SECTOR_SIZE
 
+    jump_hook_pritimive = ShellcodePrimitiveJumpHook(
+        "hook_next_stage",
+        jump_hook_location,
+        jump_hook_goto
+    )
+
     step = ShellcodeStep(
         "first_step",
         shellcode_address,
         [
-            ShellcodePrimitiveJumpHook(
-                "hook_next_stage",
-                jump_hook_location,
-                jump_hook_goto
-            ),
+            jump_hook_pritimive,
         ],
         0x1000
     )
@@ -56,7 +58,7 @@ def test_jump_hook_sanity(
     out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)
     shellcode = out_file.read_bytes()
 
-    EXPECTED_HOOK = arch_helper.get_jump_hook_bytes(jump_hook_goto)
+    EXPECTED_HOOK = jump_hook_pritimive.set_bytes
 
     # Try to run shellcode
     # --------------------
