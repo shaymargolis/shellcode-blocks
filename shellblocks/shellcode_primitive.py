@@ -5,11 +5,6 @@ from shellblocks.compiler_arch import CompilerArch
 from shellblocks.utils import check_call_print, sources_location
 
 
-class RawCode:
-    def __init__(self, code):
-        self.code = code
-
-
 def bytes_to_c_arr(data):
     values = ",".join([format(b, '#04x') for b in data])
     return '{' + values + '}'
@@ -38,8 +33,6 @@ class ShellcodePrimitive:
                 contents += [f"#define {key} \"{val}\""]
             elif isinstance(val, bytes):
                 contents += [f"#define {key} {bytes_to_c_arr(val)}"]
-            elif isinstance(val, RawCode):
-                contents += [f"#define {key} {{{val.code}}}"]
             else:
                 raise Exception(f"Cannot write header! Bad type {type(val)}")
 
