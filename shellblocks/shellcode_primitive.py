@@ -43,6 +43,9 @@ class ShellcodePrimitive:
             source_src = sources_location / source
             source_dst = path / source
 
+            source_dst_dir = source_dst.parents[0]
+            source_dst_dir.mkdir(parents=True, exist_ok=True)
+
             shutil.copy(source_src, source_dst)
 
         self.generate_header_file(path)
