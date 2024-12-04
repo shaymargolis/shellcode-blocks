@@ -1,4 +1,4 @@
-from shellblocks.shellcode_primitive import ShellcodePrimitive
+from shellblocks.shellcode_primitive import ShellcodePrimitive, RawCode
 
 
 class ShellcodePrimitiveMemset(ShellcodePrimitive):
@@ -14,8 +14,14 @@ class ShellcodePrimitiveMemset(ShellcodePrimitive):
         self.set_bytes = set_bytes
 
     def header_requirements(self):
+        statements = []
+
+        for i, byte in enumerate(self.set_bytes):
+            statements.append(f"*(dst + {i}) = {hex(byte)};")
+
+        memset_code = "\\\n".join(statements)
+
         return {
             "MEMSET_DEST_ADDRESS": self.dst_addr,
-            "MEMSET_ITEMS": self.set_bytes,
-            "MEMSET_ITEMS_LEN": len(self.set_bytes),
+            "MEMSET_CODE": RawCode(memset_code)
         }
