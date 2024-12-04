@@ -1,6 +1,10 @@
 #ifndef SHELLCODE_BLOCKS_ARCH_UTILS_H
 #define SHELLCODE_BLOCKS_ARCH_UTILS_H
 
+#if defined(__mips__)
+#include "mips/utils.h"
+#endif
+
 #define REL_ACCESS_STRING __attribute__((section(".text")))
 
 #define GET_REL_LABEL(LABEL) "__get_" # LABEL
