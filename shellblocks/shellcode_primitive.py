@@ -46,7 +46,7 @@ class ShellcodePrimitive:
         return {}
 
     def generate(self, path: Path, compiler: CompilerArch):
-        for source in self.sources:
+        for source in self.sources + compiler.get_headers():
             source_src = sources_location / source
             source_dst = path / source
 
