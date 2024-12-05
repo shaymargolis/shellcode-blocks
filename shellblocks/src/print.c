@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "arch/mips/utils.h"
+#include "arch/arm/utils.h"
 #include "print.h"
 
 const u32 nop_end[] REL_ACCESS_STRING = {NOP_OPCODE,NOP_OPCODE,NOP_OPCODE};

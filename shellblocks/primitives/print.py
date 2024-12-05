@@ -5,7 +5,7 @@ class ShellcodePrimitivePrint(ShellcodePrimitive):
     def __init__(self, nickname: str, print_function: int, print_string: str):
         super().__init__(
             nickname,
-            ["print.c", "utils.h", "arch/mips/utils.h"],
+            ["print.c", "utils.h", "arch/arm/utils.h"],
             "print.c",
             "print.h"
         )
