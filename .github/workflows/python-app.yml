@@ -35,3 +35,4 @@ jobs:
       run: |
         pytest --compiler-arch=mipsbe
         pytest --compiler-arch=mipsle
+        pytest --compiler-arch=armle
