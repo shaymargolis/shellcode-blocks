@@ -1,5 +1,6 @@
 from unicorn.mips_const import UC_MIPS_REG_PC, UC_MIPS_REG_29, UC_MIPS_REG_4
 from unicorn.arm_const import UC_ARM_REG_PC, UC_ARM_REG_SP, UC_ARM_REG_R0
+from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP
 
 from shellblocks.compiler_archs import CompilerArchOption
 
@@ -7,6 +8,38 @@ from shellblocks.compiler_archs import CompilerArchOption
 class ArchHelper:
     def __init__(self, compiler_arch_option):
         self.compiler_arch_option = compiler_arch_option
+
+
+class X86Helper(ArchHelper):
+    def __init__(self, compiler_arch_option):
+        super().__init__(compiler_arch_option)
+
+        assert compiler_arch_option in [
+            CompilerArchOption.X86,
+            CompilerArchOption.X86_64,
+        ]
+
+    def get_jump_hook_bytes(self, jump_hook_goto):
+        raise NotImplementedError()
+
+    def get_ret_bytes(self):
+        val = 0x909090c3  # "ret nop nop nop" in X86
+
+        return val.to_bytes(4, 'little')
+
+    def get_curr_pc(self, mu):
+        return mu.reg_read(UC_X86_REG_EIP)
+
+    def set_curr_sp(self, mu, new_stack):
+        mu.reg_write(UC_X86_REG_ESP, new_stack)
+
+    def get_curr_sp(self, mu):
+        return mu.reg_read(UC_X86_REG_ESP)
+
+    def get_curr_func_arg(self, mu, func_arg):
+        val = mu.mem_read(mu.reg_read(UC_X86_REG_ESP) + (func_arg + 1) * 4, 4)
+
+        return int.from_bytes(val, 'little')
 
 
 class ARMHelper(ArchHelper):

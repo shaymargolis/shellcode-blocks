@@ -8,14 +8,16 @@ from unicorn import (
     Uc,
     UC_ARCH_MIPS,
     UC_ARCH_ARM,
+    UC_ARCH_X86,
     UC_MODE_ARM,
     UC_MODE_32,
+    UC_MODE_64,
     UC_MODE_BIG_ENDIAN,
     UC_MODE_LITTLE_ENDIAN,
 )
 
 
-from shellblocks.test_arch_helper import MIPSHelper, ARMHelper
+from shellblocks.test_arch_helper import MIPSHelper, ARMHelper, X86Helper
 
 from shellblocks.compiler_archs import CompilerArchOption, compiler_arch_to_object
 
@@ -48,6 +50,8 @@ def arch_helper(compiler_arch_option):
         return MIPSHelper(compiler_arch_option)
     if compiler_arch_option in [CompilerArchOption.ARMLE]:
         return ARMHelper(compiler_arch_option)
+    if compiler_arch_option in [CompilerArchOption.X86, CompilerArchOption.X86_64]:
+        return X86Helper(compiler_arch_option)
     else:
         raise NotImplementedError("Arch unimplemented error!")
 
@@ -61,6 +65,10 @@ def get_mu(compiler_arch_option):
             return Uc(UC_ARCH_MIPS, UC_MODE_32 | UC_MODE_LITTLE_ENDIAN)
         elif CompilerArchOption.ARMLE == compiler_arch_option:
             return Uc(UC_ARCH_ARM, UC_MODE_ARM | UC_MODE_LITTLE_ENDIAN)
+        elif CompilerArchOption.X86 == compiler_arch_option:
+            return Uc(UC_ARCH_X86, UC_MODE_32)
+        elif CompilerArchOption.X86_64 == compiler_arch_option:
+            return Uc(UC_ARCH_X86, UC_MODE_64)
         else:
             raise NotImplementedError("Arch unimplemented error!")
 
