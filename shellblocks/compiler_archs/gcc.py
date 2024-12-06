@@ -17,6 +17,9 @@ class CompilerArchGCC(CompilerArch):
         return [
             "-nostdlib",
             "-ffreestanding",
+            # Require GCC to keep the compilation order
+            # as declared in the source files
+            "-fno-toplevel-reorder",
         ]
 
     def compile_primitive(self, src_path: str) -> [str]:
