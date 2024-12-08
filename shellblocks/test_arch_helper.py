@@ -1,6 +1,7 @@
 from unicorn.mips_const import UC_MIPS_REG_PC, UC_MIPS_REG_29, UC_MIPS_REG_4
 from unicorn.arm_const import UC_ARM_REG_PC, UC_ARM_REG_SP, UC_ARM_REG_R0
 from unicorn.x86_const import UC_X86_REG_EIP, UC_X86_REG_ESP, UC_X86_REG_RDI
+from unicorn.ppc_const import UC_PPC_REG_PC, UC_PPC_REG_1, UC_PPC_REG_3
 
 from shellblocks.compiler_archs import CompilerArchOption
 
@@ -56,6 +57,34 @@ class X86Helper(ArchHelper):
         raise NotImplementedError(
             "Only x86 or x86-64 calling conventions are implemented"
         )
+
+
+class PowerPCHelper(ArchHelper):
+    def __init__(self, compiler_arch_option):
+        super().__init__(compiler_arch_option)
+
+        assert compiler_arch_option in [
+            CompilerArchOption.POWERPCLE,
+        ]
+
+    def get_ret_bytes(self):
+        val = 0x4E800020
+        return val.to_bytes(4, 'little')
+
+    def get_curr_pc(self, mu):
+        return mu.reg_read(UC_PPC_REG_PC)
+
+    def set_curr_sp(self, mu, new_stack):
+        mu.reg_write(UC_PPC_REG_1, new_stack)
+
+    def get_curr_sp(self, mu):
+        return mu.reg_read(UC_PPC_REG_1)
+
+    def get_curr_func_arg(self, mu, func_arg):
+        if func_arg == 0:
+            return mu.reg_read(UC_PPC_REG_3)
+
+        raise NotImplementedError(f"Getting {func_arg} func arg")
 
 
 class ARMHelper(ArchHelper):
