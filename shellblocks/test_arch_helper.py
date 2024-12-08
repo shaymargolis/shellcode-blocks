@@ -24,9 +24,6 @@ class X86Helper(ArchHelper):
         if CompilerArchOption.X86_64 == self.compiler_arch_option:
             self.word_size = 8
 
-    def get_jump_hook_bytes(self, jump_hook_goto):
-        raise NotImplementedError()
-
     def get_ret_bytes(self):
         return b"\xc3"  # "ret" in x86
 
@@ -69,9 +66,6 @@ class ARMHelper(ArchHelper):
             CompilerArchOption.ARMLE,
         ]
 
-    def get_jump_hook_bytes(self, jump_hook_goto):
-        raise NotImplementedError()
-
     def get_ret_bytes(self):
         val = 0xe12fff1e  # "bx lr" in ARM
 
@@ -104,21 +98,6 @@ class MIPSHelper(ArchHelper):
             CompilerArchOption.MIPSBE,
             CompilerArchOption.MIPSLE,
         ]
-
-    def get_jump_hook_bytes(self, jump_hook_goto):
-        EXPECTED_HOOK = [
-            0x3c020000 + (jump_hook_goto >> 16),
-            0x24420000 + (jump_hook_goto & 0xffff),
-            0x00400008,
-            0x00000000,
-        ]
-
-        if CompilerArchOption.MIPSBE == self.compiler_arch_option:
-            return b"".join(map(lambda x: x.to_bytes(4, 'big'), EXPECTED_HOOK))
-        elif CompilerArchOption.MIPSLE == self.compiler_arch_option:
-            return b"".join(map(lambda x: x.to_bytes(4, 'little'), EXPECTED_HOOK))
-        else:
-            raise NotImplementedError()
 
     def get_ret_bytes(self):
         val = 0x03e00008  # "jr $ra" in MIPS
