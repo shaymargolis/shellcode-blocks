@@ -4,6 +4,7 @@ from shellblocks.compiler_archs.mips import CompilerArchMIPSBE, CompilerArchMIPS
 from shellblocks.compiler_archs.arm import CompilerArchARMLE
 from shellblocks.compiler_archs.x86 import CompilerArchX86
 from shellblocks.compiler_archs.x86_64 import CompilerArchX86_64
+from shellblocks.compiler_archs.powerpc import CompilerArchPowerPC
 from shellblocks.compiler_arch import CompilerArch
 
 
@@ -13,6 +14,7 @@ class CompilerArchOption(Enum):
     ARMLE = "armle"
     X86 = "x86"
     X86_64 = "x86_64"
+    POWERPC = "powerpc"
 
 
 def get_current_platform():
@@ -33,6 +35,8 @@ def get_current_platform():
         return CompilerArchOption.ARMLE
     if "x86_64-" in machine:
         return CompilerArchOption.X86_64
+    if "powerpc64le-" in machine:
+        return CompilerArchOption.POWERPC
 
     return None
 
@@ -51,6 +55,8 @@ def compiler_arch_to_object(arch: CompilerArchOption) -> CompilerArch:
         return CompilerArchX86(CompilerArchOption.X86_64 == current_platform)
     elif arch == CompilerArchOption.X86_64:
         return CompilerArchX86_64(use_main_gcc)
+    elif arch == CompilerArchOption.POWERPC:
+        return CompilerArchPowerPC(use_main_gcc)
 
     raise NotImplementedError()
 
