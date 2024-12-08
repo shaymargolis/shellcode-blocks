@@ -3,8 +3,12 @@
 
 #if defined(__mips__)
 #include "mips/utils.h"
+#elif defined(__i386__) || defined(__x86_64__)
+#include "x86/utils.h"
 #elif defined(__arm__)
 #include "arm/utils.h"
+#elif defined(__powerpc__)
+#include "powerpc/utils.h"
 #endif
 
 #define REL_ACCESS_STRING __attribute__((section(".text")))
