@@ -8,8 +8,6 @@ class CompilerArchARM(CompilerArchGCC):
     def __init__(self):
         super().__init__()
 
-        self.compiler_path = self.get_compiler_path()
-
     def get_headers(self) -> List[str]:
         return ["arch/arm/utils.h"]
 
