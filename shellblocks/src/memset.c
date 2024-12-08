@@ -2,11 +2,6 @@
 #include "arch/utils.h"
 #include "memset.h"
 
-// Must be the first variable
-DECLARE_NOP_END(nop_end);
-
-const u8 items[] REL_ACCESS_STRING = MEMSET_ITEMS;
-
 void start(void) {
     u8 *items_rel;
 
@@ -23,3 +18,8 @@ void start(void) {
 
     JUMP_TO_NOP_END(nop_end);
 }
+
+const u8 items[] REL_ACCESS_STRING = MEMSET_ITEMS;
+
+// Must be the last variable
+DECLARE_NOP_END(nop_end);

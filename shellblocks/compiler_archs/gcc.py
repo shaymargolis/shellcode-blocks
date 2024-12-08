@@ -2,10 +2,15 @@ from shellblocks.compiler_arch import CompilerArch
 
 
 class CompilerArchGCC(CompilerArch):
-    def __init__(self):
+    def __init__(self, use_main_gcc: bool):
         super().__init__()
 
-        self.compiler_path = self.get_compiler_path()
+        self.use_main_gcc = use_main_gcc
+
+        if self.use_main_gcc:
+            self.compiler_path = "gcc"
+        else:
+            self.compiler_path = self.get_compiler_path()
 
     def get_compiler_path(self):
         raise NotImplementedError()
@@ -17,6 +22,7 @@ class CompilerArchGCC(CompilerArch):
         return [
             "-nostdlib",
             "-ffreestanding",
+            "-fno-toplevel-reorder",
         ]
 
     def compile_primitive(self, src_path: str) -> [str]:

@@ -9,8 +9,7 @@
         "nop\n\t"                                               \
         "bal " GET_REL_LABEL(LABEL) "\n\t"                      \
         "nop\n\t"                                               \
-        GET_REL_LABEL(LABEL) ": move $v0, $ra\n\t"              \
-        "move %0, $v0\n\t"                                      \
+        GET_REL_LABEL(LABEL) ": move %0, $ra\n\t"               \
         "addiu %0, (" #LABEL " - " GET_REL_LABEL(LABEL) ")\n\t" \
         : "=r" (OUTPUT) : : "$ra"                               \
     )

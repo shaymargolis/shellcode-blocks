@@ -4,17 +4,15 @@ from shellblocks.compiler_archs.gcc import CompilerArchGCC
 from shellblocks.utils import sources_location
 
 
-class CompilerArchARM(CompilerArchGCC):
+class CompilerArchX86_64(CompilerArchGCC):
     def __init__(self, use_main_gcc: bool):
         super().__init__(use_main_gcc)
 
     def get_headers(self) -> List[str]:
-        return ["arch/arm/utils.h"]
+        return ["arch/x86/utils.h"]
 
     def get_ldscript_path(self):
         return (sources_location / "shellcode_ldscript.ld").as_posix()
 
-
-class CompilerArchARMLE(CompilerArchARM):
     def get_compiler_path(self):
-        return "arm-linux-gnueabi-gcc-10"
+        return "x86_64-linux-gnu-gcc-8"

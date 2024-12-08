@@ -2,11 +2,6 @@
 #include "arch/utils.h"
 #include "print.h"
 
-// Must be the first variable
-DECLARE_NOP_END(nop_end);
-
-const char print_string[] REL_ACCESS_STRING = PRINT_STRING;
-
 void start(void) {
     void (*print_func)(const char *) = (void (*)(const char *))PRINT_FUNCTION_ADDRESS;
     char *print_string_rel;
@@ -16,3 +11,8 @@ void start(void) {
 
     JUMP_TO_NOP_END(nop_end);
 }
+
+const char print_string[] REL_ACCESS_STRING = PRINT_STRING;
+
+// Must be the last variable
+DECLARE_NOP_END(nop_end);
