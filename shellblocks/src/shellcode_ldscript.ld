@@ -9,9 +9,4 @@ SECTIONS
     {
         *(.rodata*)
     }
-
-    /DISCARD/ : 
-    {
-        *(*)
-    }
 }
