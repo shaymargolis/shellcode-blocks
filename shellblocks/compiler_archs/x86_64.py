@@ -5,8 +5,8 @@ from shellblocks.utils import sources_location
 
 
 class CompilerArchX86_64(CompilerArchGCC):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, use_main_gcc: bool):
+        super().__init__(use_main_gcc)
 
     def get_headers(self) -> List[str]:
         return ["arch/x86/utils.h"]

@@ -5,8 +5,8 @@ from shellblocks.utils import sources_location
 
 
 class CompilerArchMIPS(CompilerArchGCC):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, use_main_gcc: bool):
+        super().__init__(use_main_gcc)
 
     def get_gcc_flags(self):
         return super().get_gcc_flags() + [
