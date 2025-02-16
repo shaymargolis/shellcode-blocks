@@ -15,6 +15,9 @@ class CompilerArchGCC(CompilerArch):
 
     def get_gcc_flags(self):
         return [
+            # Dont try to link with any std library
+            # or assume hosted assumptions: Allow any entrypoint
+            # and function definition
             "-nostdlib",
             "-ffreestanding",
             # Require GCC to keep the compilation order
