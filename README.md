@@ -7,7 +7,13 @@
 This repo allows you to concatenate shellcodes, running from different address spaces and links between them.
 Each shellcode will ensure the next will run, and will constitute from various primitives.
 
-For starters, we will only support MIPS (le/be).
+Supported architectures:
+
+- X86 and X64
+- Mips (LE and BE)
+- Arm 32bit
+
+Adding another architecture is very simple!
 
 ## Shellcode primitives
 
