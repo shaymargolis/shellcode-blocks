@@ -53,7 +53,6 @@ def memset_get_shellcode(temp_dir_path, compiler_arch, memset_helper, copy_bytes
 
     step = ShellcodeStep(
         "first_step",
-        helper.shellcode_address,
         [
             ShellcodePrimitiveMemset(
                 "copy_next_stage",
@@ -61,7 +60,8 @@ def memset_get_shellcode(temp_dir_path, compiler_arch, memset_helper, copy_bytes
                 copy_bytes
             ),
         ],
-        0x1000 * len(copy_bytes)
+        0x1000 * len(copy_bytes),
+        base_address=helper.shellcode_address
     )
 
     out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)

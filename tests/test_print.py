@@ -44,11 +44,11 @@ def print_shellcode(compiler_arch, temp_dir_path, print_function_addr, string_to
 
     step = ShellcodeStep(
         "first_step",
-        shellcode_address,
         [
             ShellcodePrimitivePrint("print_stuff", print_function_addr, string_to_print),
         ],
-        0x1000
+        0x1000,
+        base_address=shellcode_address,
     )
 
     out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)

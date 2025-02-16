@@ -24,11 +24,11 @@ def test_goto_sanity(get_mu, temp_dir_path, arch_helper, compiler_arch, goto_pag
 
     step = ShellcodeStep(
         "first_step",
-        shellcode_address,
         [
             ShellcodePrimitiveGoto("copy_next_stage", goto_address),
         ],
-        0x1000
+        0x1000,
+        base_address=shellcode_address,
     )
 
     out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)
@@ -64,11 +64,11 @@ def test_goto_is_pic(get_mu, temp_dir_path, arch_helper, compiler_arch, shellcod
 
     step = ShellcodeStep(
         "first_step",
-        shellcode_address,
         [
             ShellcodePrimitiveGoto("copy_next_stage", goto_address),
         ],
-        0x1000
+        0x1000,
+        base_address=shellcode_address,
     )
 
     out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)

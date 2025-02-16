@@ -24,14 +24,14 @@ class ShellcodePrimitiveJumpHook(ShellcodePrimitiveMemset):
     def generate(self, path: Path, compiler: CompilerArch):
         step = ShellcodeStep(
             self.nickname,
-            0x0,  # This should be PIC
             [
                 ShellcodePrimitiveGoto(
                     self.nickname,
                     self.goto_address
                 ),
             ],
-            0x1000
+            0x1000,
+            base_address=0x0,  # This should be PIC
         )
 
         out_file = step.generate(path / self.nickname / "goto_temp", compiler)
