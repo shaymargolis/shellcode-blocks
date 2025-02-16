@@ -21,11 +21,11 @@ def generate_memset_to_goto(temp_dir_path,
 
     step = ShellcodeStep(
         "first_step",
-        shellcode_address,
         [
             expected_goto_primitive,
         ],
-        0x1000
+        0x1000,
+        base_address=shellcode_address,
     )
 
     out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)
@@ -39,11 +39,11 @@ def generate_memset_to_goto(temp_dir_path,
 
     step = ShellcodeStep(
         "first_step",
-        shellcode_address,
         [
             expected_memset_primitive,
         ],
-        0x1000
+        0x1000,
+        base_address=shellcode_address,
     )
 
     out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)
@@ -95,11 +95,11 @@ def test_jump_hook_sanity(
 
     step = ShellcodeStep(
         "first_step",
-        shellcode_address,
         [
             jump_hook_pritimive,
         ],
-        0x1000
+        0x1000,
+        base_address=shellcode_address
     )
 
     out_file = step.generate(temp_dir_path / step.nickname, compiler_arch)
