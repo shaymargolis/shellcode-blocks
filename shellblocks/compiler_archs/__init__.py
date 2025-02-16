@@ -6,14 +6,6 @@ from shellblocks.compiler_archs.x86_64 import CompilerArchX86_64
 from shellblocks.compiler_arch import CompilerArch
 
 
-class CompilerArchOption(Enum):
-    MIPSBE = "mipsbe"
-    MIPSLE = "mipsle"
-    ARMLE = "armle"
-    X86 = "x86"
-    X86_64 = "x86_64"
-
-
 def compiler_arch_to_object(arch: CompilerArchOption) -> CompilerArch:
     if arch == CompilerArchOption.MIPSBE:
         return CompilerArchMIPSBE()
