@@ -67,6 +67,8 @@ def memcpy_get_shellcode(temp_dir_path, compiler_arch, memcpy_helper, copy_len):
     100,
     200,
     0x1000,
+    0,
+    1,
     2,
     3,
     100

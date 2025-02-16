@@ -73,6 +73,8 @@ def memset_get_shellcode(temp_dir_path, compiler_arch, memset_helper, copy_bytes
 @pytest.mark.parametrize('copy_len', [
     100,
     200,
+    0,
+    1,
     2,
     3,
     8,
