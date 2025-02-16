@@ -7,6 +7,8 @@
 #include "x86/utils.h"
 #elif defined(__arm__)
 #include "arm/utils.h"
+#elif defined(__powerpc__)
+#include "powerpc/utils.h"
 #endif
 
 #define REL_ACCESS_STRING __attribute__((section(".text")))

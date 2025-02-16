@@ -8,6 +8,7 @@ class CompilerArchOption(Enum):
     ARMLE = "armle"
     X86 = "x86"
     X86_64 = "x86_64"
+    POWERPCLE = "powerpcle"
 
 
 def get_current_platform():
@@ -28,5 +29,7 @@ def get_current_platform():
         return CompilerArchOption.ARMLE
     if "x86_64-" in machine:
         return CompilerArchOption.X86_64
+    if "powerpc64le-" in machine:
+        return CompilerArchOption.POWERPCLE
 
     return None
