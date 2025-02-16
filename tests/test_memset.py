@@ -60,7 +60,7 @@ def memset_get_shellcode(temp_dir_path, compiler_arch, memset_helper, copy_bytes
                 copy_bytes
             ),
         ],
-        0x1000 * len(copy_bytes),
+        0x1000,
         base_address=helper.shellcode_address
     )
 
