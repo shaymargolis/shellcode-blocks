@@ -8,7 +8,13 @@ from shellblocks.utils import check_call_print
 
 
 class ShellcodeStep:
-    def __init__(self, nickname: str, base_address: int, primitives: [ShellcodePrimitive], max_len: int):
+    def __init__(
+        self,
+        nickname: str,
+        primitives: [ShellcodePrimitive],
+        max_len: int,
+        base_address: int = 0
+    ):
         self.nickname = nickname
         self.base_address = base_address
         self.primitives = primitives
