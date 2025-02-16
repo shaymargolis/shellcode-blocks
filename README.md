@@ -23,7 +23,6 @@ A final "Shellcode Structure" example:
 ```python
 first_step = ShellcodeStep(
     "first_step",
-    0xbfc00000,
     [
         ShellcodePrimitiveMemcpy("copy_next_stage", 0x80abcdef, 0x8f0ed0b0, 0x100),
         ShellcodePrimitivePrint("print_debug", 0x80901234, "This is a print!\n"),
