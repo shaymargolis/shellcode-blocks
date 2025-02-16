@@ -1,4 +1,4 @@
-from enum import Enum
+from shellblocks.compiler_arch_option import CompilerArchOption
 from shellblocks.compiler_archs.mips import CompilerArchMIPSBE, CompilerArchMIPSLE
 from shellblocks.compiler_archs.arm import CompilerArchARMLE
 from shellblocks.compiler_archs.x86 import CompilerArchX86

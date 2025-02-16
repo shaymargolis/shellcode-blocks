@@ -1,5 +1,6 @@
 from typing import List
 
+from shellblocks.compiler_arch_option import CompilerArchOption
 from shellblocks.compiler_archs.gcc import CompilerArchGCC
 from shellblocks.utils import sources_location
 
@@ -18,3 +19,6 @@ class CompilerArchARM(CompilerArchGCC):
 class CompilerArchARMLE(CompilerArchARM):
     def get_compiler_path(self):
         return "arm-linux-gnueabi-gcc-10"
+
+    def compiler_arch_option(self) -> [CompilerArchOption]:
+        return [CompilerArchOption.MIPSLE]

@@ -1,11 +1,15 @@
 from shellblocks.compiler_arch import CompilerArch
+from shellblocks.compiler_arch_option import get_current_platform
 
 
 class CompilerArchGCC(CompilerArch):
     def __init__(self):
         super().__init__()
 
-        self.compiler_path = self.get_compiler_path()
+        if get_current_platform() in self.compiler_arch_option():
+            self.compiler_path = "gcc"
+        else:
+            self.compiler_path = self.get_compiler_path()
 
     def get_compiler_path(self):
         raise NotImplementedError()
