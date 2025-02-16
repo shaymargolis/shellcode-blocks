@@ -1,11 +1,15 @@
 from shellblocks.compiler_arch import CompilerArch
+from shellblocks.compiler_arch_option import get_current_platform
 
 
 class CompilerArchGCC(CompilerArch):
     def __init__(self):
         super().__init__()
 
-        self.compiler_path = self.get_compiler_path()
+        if get_current_platform() in self.compiler_arch_option():
+            self.compiler_path = "gcc"
+        else:
+            self.compiler_path = self.get_compiler_path()
 
     def get_compiler_path(self):
         raise NotImplementedError()
@@ -15,8 +19,14 @@ class CompilerArchGCC(CompilerArch):
 
     def get_gcc_flags(self):
         return [
+            # Dont try to link with any std library
+            # or assume hosted assumptions: Allow any entrypoint
+            # and function definition
             "-nostdlib",
             "-ffreestanding",
+            # Require GCC to keep the compilation order
+            # as declared in the source files
+            "-fno-toplevel-reorder",
         ]
 
     def compile_primitive(self, src_path: str) -> [str]:

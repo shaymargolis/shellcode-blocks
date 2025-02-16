@@ -1,14 +1,13 @@
 from typing import List
 
 from shellblocks.compiler_archs.gcc import CompilerArchGCC
+from shellblocks.compiler_arch_option import CompilerArchOption
 from shellblocks.utils import sources_location
 
 
 class CompilerArchMIPS(CompilerArchGCC):
     def __init__(self):
         super().__init__()
-
-        self.compiler_path = self.get_compiler_path()
 
     def get_gcc_flags(self):
         return super().get_gcc_flags() + [
@@ -26,6 +25,9 @@ class CompilerArchMIPSBE(CompilerArchMIPS):
     def get_compiler_path(self):
         return "mips-linux-gnu-gcc-9"
 
+    def compiler_arch_option(self) -> [CompilerArchOption]:
+        return [CompilerArchOption.MIPSBE]
+
 
 class CompilerArchMIPSLE(CompilerArchMIPS):
     def get_gcc_flags(self):
@@ -35,3 +37,6 @@ class CompilerArchMIPSLE(CompilerArchMIPS):
 
     def get_compiler_path(self):
         return "mips-linux-gnu-gcc-9"
+
+    def compiler_arch_option(self) -> [CompilerArchOption]:
+        return [CompilerArchOption.MIPSLE]
