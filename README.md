@@ -107,6 +107,4 @@ sudo apt install gcc-9-mips-linux-gnu binutils-multiarch
 
 ## Known issues
 
-### Memcpy
-
-1. memcpy is not working for copylen=1
+Currently none!
