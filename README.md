@@ -4,8 +4,8 @@
 
 ## What is this repo?
 
-This repo allows you to concatenate shellcodes, running from different address spaces and links between them.
-Each shellcode will ensure the next will run, and will constitute from various primitives.
+Allows you to write PIC and fast shellcodes in C! keeping your logic simple, easy to expand, test and maintain.
+Shellcodes are seperated to "primitives", each one provides a behavior, and to create a full grown shellcode you can concatenate multiple primitives, or to create one primtives doing all of your logic.
 
 Supported architectures:
 
@@ -14,6 +14,42 @@ Supported architectures:
 - Arm 32bit
 
 Adding another architecture is very simple!
+
+## What does this mean?
+
+For example, see our implementation of goto:
+
+```c
+void start(void) {
+    void (*goto_address)() = (void (*)())(GOTO_ADDRESS);
+
+    goto_address();
+}
+```
+
+Our implementation of memcpy:
+
+```c
+void __attribute__((noreturn)) start(void) {
+    u8 *src = (u8 *)MEMCPY_SOURCE_ADDRESS;
+    u8 *dst = (u8 *)MEMCPY_DEST_ADDRESS;
+    u32 len = (u32)MEMCPY_LEN;
+
+    u8 *end = src + len;
+
+    while (src < end - 1) {
+        *dst = *src;
+        src++;
+        dst++;
+    }
+
+    *dst = *src;
+
+    __builtin_unreachable();
+}
+```
+
+Super easy and to write even more complex code!
 
 ## Shellcode primitives
 
