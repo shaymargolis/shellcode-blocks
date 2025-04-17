@@ -1,6 +1,6 @@
 # Shellcode Blocks
 
-## build status [![Python application](https://github.com/shaymargolis/shellcode-blocks/actions/workflows/python-app.yml/badge.svg)](https://github.com/shaymargolis/shellcode-blocks/actions/workflows/python-app.yml)
+## build status [![Python application](https://github.com/shaymargolis/shellcode-blocks/actions/workflows/build-test.yml/badge.svg)](https://github.com/shaymargolis/shellcode-blocks/actions/workflows/build-test.yml)
 
 ## What is this repo?
 
