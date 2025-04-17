@@ -22,8 +22,9 @@ jobs:
           python -m venv .venv
           . .venv/bin/activate
           pip install --upgrade pip
-          pip install flake8 pytest
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install uv
+          uv pip install flake8 pytest
+          if [ -f requirements.txt ]; then uv pip install -r requirements.txt; fi
       - name: Archive virtualenv
         run: tar czf venv.tar.gz .venv
       - name: Upload virtualenv artifact
